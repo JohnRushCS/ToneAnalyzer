@@ -42,8 +42,19 @@ class GradientDescent():
 		elif gd_type == "quadratic":
 			self.gd_func = self.quadratic_eval
 
-		self.theta = np.ones(x_data.shape[1]) 
+		self.theta = np.ones(self.X.shape[1]) 
 
 	def normal_func_eval(self):
-		pass
+		try:
+			return self.normal_func_error
+		except AttributeError:
+			self.theta = np.linalg.solve(self.X.T.dot(self.X), self.X.T.dot(self.y))
+			self.normal_func_error = self._calc_linear_error()
+			return self.normal_func_error
+
+	def _calc_linear_error(self):
+		y_hat = np.dot(self.X, self.theta)
+		error = self.y - y_hat
+		return np.square(error).sum()
+
 
